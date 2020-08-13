@@ -3,34 +3,22 @@
  * @time: 2020/7/6
  * @func: 辅助生成导航所需数据的工具函数
  ***/
-interface Breadcrumb {
-  [key: string]: {
-    icon: string
-    name: string
-  }
-}
-const breadcrumb: Breadcrumb = {}
 
-interface Route {
-  icon: string
-  name: string
-  path: string
-  routes?: Route[]
-}
+const breadcrumb = {}
 
 /*
  * 抽离逻辑出来
  * 协助recursiveMenu 处理下级路由
  * @params: rootPath 跟路径
  * */
-export const createMenu = (rootPath: string, routes: Route[]) => {
-  const menu: Route[] = []
+export const createMenu = (rootPath, routes, permissions) => {
+  const menu = []
 
-  routes.forEach((subMenu: Route) => {
-    const underMenu: Route[] = []
+  routes.forEach((subMenu) => {
+    const underMenu = []
     if (subMenu.routes) {
       // 又要去遍历这个对象
-      subMenu.routes.forEach((under: Route) => {
+      subMenu.routes.forEach((under) => {
         // 在这里边处理
         const basePath = rootPath + subMenu.path
         // if( permissions ) { // 处理权限 }
@@ -48,7 +36,7 @@ export const createMenu = (rootPath: string, routes: Route[]) => {
           })
         }
         if (under.routes) {
-          under.routes.forEach((lastRoute: Route) => {
+          under.routes.forEach((lastRoute) => {
             if (lastRoute.path) {
               breadcrumb[basePath + under.path + lastRoute.path] = {
                 icon: lastRoute.icon,
@@ -95,11 +83,11 @@ export const createMenu = (rootPath: string, routes: Route[]) => {
  * @params: routes ===> 路由对象
  * @params: permissions ===> 后端返回给咱们的权限码 是一个数组。
  * */
-export const recursiveMenu = (routes: Route[], permissions = []) => {
-  const topMenu: Route[] = []
-  const sideMenu: any = {}
+export const recursiveMenu = (routes, permissions = []) => {
+  const topMenu = []
+  const sideMenu = {}
 
-  routes.forEach((route: Route) => {
+  routes.forEach((route) => {
     const path = route.path
     topMenu.push({
       name: route.name,
